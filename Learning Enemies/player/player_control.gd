@@ -5,8 +5,8 @@ var using_controller = false # only affects camera motion
 # Get the gravity from the project settings to be synced with RigidBody nodes.
 var default_gravity = ProjectSettings.get_setting("physics/3d/default_gravity")
 var gravity = default_gravity
-const WALK_SPEED := 10
-const DODGE_SPEED := 15
+const WALK_SPEED := 8
+const DODGE_SPEED := 10
 const DODGE_DURATION_SECS := .5
 const DODGE_COOLDOWN_SECS := .1
 const JUMP_SPEED := 14.0
@@ -19,7 +19,6 @@ var moving_right := true # Did the player last try to walk right?
 var grounded_speed := 0
 var can_dodge := true
 var is_dodging := false
-var dodge_self_damage := 18.0
 
 var mouse_camera_sensitivity := .001
 var joystick_camera_sensitivity := .1
@@ -43,31 +42,31 @@ var shoot_self_damage := 18.0
 @onready var camera_twist_pivot := $CameraTwistPivot
 @onready var camera_pitch_pivot := $CameraTwistPivot/CameraPitchPivot
 @onready var camera := $CameraTwistPivot/CameraPitchPivot/CameraVisualObject
-@onready var armature := $CotuAnims/Armature
-@onready var anim_tree := $AnimationTree
+#@onready var armature := $PlayerAnims/Armature
+#@onready var anim_tree := $AnimationTree
 @onready var hurtbox := $Hurtbox
 
-@onready var root := $/root/ViewControl
+@onready var root := $/root
 var level : Node3D
 var target: Node3D
-var ui: Control
+#var ui: Control
 
 const LERP_VAL := .15 # The rate at which lerp funcs change; used for body mvmt animations
 
 func _ready():
 	level = root.find_child("Level")
-	target = level.find_child("Icon")
-	ui = root.find_child("UIRoot")
+	#ui = root.find_child("UIRoot")
 	
 	Input.mouse_mode = Input.MOUSE_MODE_CAPTURED
 
 func _physics_process(delta):
 	# Dodge logic
 	if Input.is_action_just_pressed("Dodge") and can_dodge:
-		anim_tree.set("parameters/StateMachine/conditions/just_dodged", true)
+		#anim_tree.set("parameters/StateMachine/conditions/just_dodged", true)
 		dodge()
 	else:
-		anim_tree.set("parameters/StateMachine/conditions/just_dodged", false)
+		pass
+		#anim_tree.set("parameters/StateMachine/conditions/just_dodged", false)
 	if Input.is_action_just_pressed("Jump") and is_on_floor():
 		velocity.y = JUMP_SPEED
 		
@@ -89,18 +88,17 @@ func _physics_process(delta):
 		velocity.x = lerp(velocity.x, oriented_mvmt_dir.x * grounded_speed, LERP_VAL)
 		velocity.z = lerp(velocity.z, oriented_mvmt_dir.z * grounded_speed, LERP_VAL)
 		if is_on_floor():
-			armature.rotation.y = lerp_angle(armature.rotation.y, atan2(velocity.x, velocity.z), LERP_VAL)
+			pass
+			#armature.rotation.y = lerp_angle(armature.rotation.y, atan2(velocity.x, velocity.z), LERP_VAL)
 		else:
-			armature.rotation.y = lerp_angle(armature.rotation.y, atan2(velocity.x, velocity.z), LERP_VAL / 5)
+			pass
+			#armature.rotation.y = lerp_angle(armature.rotation.y, atan2(velocity.x, velocity.z), LERP_VAL / 5)
 	else:
 		velocity.x = lerp(velocity.x, 0.0, LERP_VAL)
 		velocity.z = lerp(velocity.z, 0.0, LERP_VAL)
 	move_and_slide()
 	
-	# Recovery rate
-	hurtbox.set_fast_recovery_rate(walk_input == Vector2.ZERO and is_on_floor())
-	
-	# Roserang shoot
+	# Shoot
 	if Input.is_action_just_pressed("Shoot"):
 		if can_shoot:
 			shoot()
@@ -141,15 +139,17 @@ func _physics_process(delta):
 	place_camera()
 	
 	if Input.is_action_just_pressed("UseItem"):
-		anim_tree.set("parameters/StateMachine/conditions/use_item", true)
+		pass
+		#anim_tree.set("parameters/StateMachine/conditions/use_item", true)
 	else:
-		anim_tree.set("parameters/StateMachine/conditions/use_item", false)
+		pass
+		#anim_tree.set("parameters/StateMachine/conditions/use_item", false)
 	
 	# Animation tree parameters
 	var vel2D = Vector2(velocity.x, velocity.z)
 	var move_blend_space := Vector2(vel2D.length(), 0)
-	anim_tree.set("parameters/StateMachine/GroundBlendSpace/blend_position", move_blend_space)
-	anim_tree.set("parameters/StateMachine/AerialBlendSpace/blend_position", Vector3.UP*velocity.y)
+	#anim_tree.set("parameters/StateMachine/GroundBlendSpace/blend_position", move_blend_space)
+	#anim_tree.set("parameters/StateMachine/AerialBlendSpace/blend_position", Vector3.UP*velocity.y)
 
 func _unhandled_input(event: InputEvent) -> void:
 	if not using_controller:

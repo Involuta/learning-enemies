@@ -10,7 +10,7 @@ var current_opponent_hitboxes
 @export var opponent_hitboxes := ["default"]
 @onready var parent := get_parent()
 
-@onready var root := $/root/ViewControl
+@onready var root := $/root
 var level : Node3D
 
 func _ready():

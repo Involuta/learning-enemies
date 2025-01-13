@@ -1,4 +1,4 @@
-[gd_scene load_steps=7 format=3 uid="uid://bx7widotjjie1"]
+[gd_scene load_steps=9 format=3 uid="uid://bx7widotjjie1"]
 
 [ext_resource type="Script" path="res://player/player_control.gd" id="1_38edy"]
 [ext_resource type="PackedScene" uid="uid://caemif352yq0e" path="res://player/shakeable_camera.tscn" id="1_snyau"]
@@ -11,6 +11,12 @@ radius = 0.25
 
 [sub_resource type="CapsuleShape3D" id="CapsuleShape3D_ukfhg"]
 radius = 0.25
+
+[sub_resource type="CapsuleMesh" id="CapsuleMesh_56v2v"]
+radius = 0.25
+
+[sub_resource type="BoxMesh" id="BoxMesh_il7sj"]
+size = Vector3(0.2, 0.2, 0.2)
 
 [node name="Player" type="CharacterBody3D"]
 collision_layer = 8
@@ -37,3 +43,10 @@ opponent_hitboxes = ["Enemy"]
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="Hurtbox"]
 shape = SubResource("CapsuleShape3D_ukfhg")
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="."]
+mesh = SubResource("CapsuleMesh_56v2v")
+
+[node name="MeshInstance3D2" type="MeshInstance3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2.08165e-12, 2.08165e-12, -2)
+mesh = SubResource("BoxMesh_il7sj")
