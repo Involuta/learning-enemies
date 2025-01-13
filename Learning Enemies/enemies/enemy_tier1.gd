@@ -58,8 +58,20 @@ func lerp_look_at_target(turn_speed):
 func lerp_look_at_walk_dir(turn_speed):
 	global_rotation.y = lerp_angle(global_rotation.y, PI + atan2(velocity.x, velocity.z), turn_speed)
 
+func choose_next_action():
+	# Options: pick new dest and walk to it, attack
+	if A:
+		walk_to_new_dest()
+	elif B:
+		start_attack()
+
+func walk_to_new_dest():
+	# Choose new walk dest with AI
+	walk_dest = ai_output
+	behav_state = WALK_TO
+
 func _on_navigation_agent_3d_target_reached():
-	pass
+	choose_next_action()
 
 func _on_navigation_agent_3d_velocity_computed(safe_velocity):
 	if behav_state == WALK_TO:
@@ -99,9 +111,10 @@ func end_attack():
 	if anim_tree_exists:
 		anim_tree.set("parameters/StateMachine/conditions/overhead", false)
 		anim_tree.set("parameters/StateMachine/conditions/sweep", false)
-	behav_state = WALK_TO
+	choose_next_action()
 
 func choose_attack():
+	# Choose an attack with AI
 	pass
 
 func attack_frame():
