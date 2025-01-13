@@ -22,7 +22,7 @@ Globals="*res://globals.gd"
 [display]
 
 window/size/viewport_width=1920
-window/size/viewport_height=1800
+window/size/viewport_height=1280
 
 [input]
 

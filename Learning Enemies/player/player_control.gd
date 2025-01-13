@@ -11,7 +11,7 @@ const DODGE_DURATION_SECS := .5
 const DODGE_COOLDOWN_SECS := .1
 const JUMP_SPEED := 14.0
 const MAX_JUMP_CHARGE_SECS := .5
-# Seconds it takes for Cotu to decelerate to 0 speed when not walking
+# Seconds it takes for Player to decelerate to 0 speed when not walking
 const WALK_DECEL_SECS := .25
 
 var walk_input := Vector2.ZERO
@@ -42,7 +42,7 @@ var shoot_self_damage := 18.0
 @onready var camera_twist_pivot := $CameraTwistPivot
 @onready var camera_pitch_pivot := $CameraTwistPivot/CameraPitchPivot
 @onready var camera := $CameraTwistPivot/CameraPitchPivot/CameraVisualObject
-#@onready var armature := $PlayerAnims/Armature
+@onready var armature := $MeshInstance3D#$PlayerAnims/Armature
 #@onready var anim_tree := $AnimationTree
 @onready var hurtbox := $Hurtbox
 
@@ -75,7 +75,7 @@ func _physics_process(delta):
 	else:
 		grounded_speed = WALK_SPEED
 	
-	# Cotu movement
+	# Player movement
 	if not is_on_floor():
 		velocity.y -= gravity * delta
 	
@@ -88,11 +88,9 @@ func _physics_process(delta):
 		velocity.x = lerp(velocity.x, oriented_mvmt_dir.x * grounded_speed, LERP_VAL)
 		velocity.z = lerp(velocity.z, oriented_mvmt_dir.z * grounded_speed, LERP_VAL)
 		if is_on_floor():
-			pass
-			#armature.rotation.y = lerp_angle(armature.rotation.y, atan2(velocity.x, velocity.z), LERP_VAL)
+			armature.rotation.y = lerp_angle(armature.rotation.y, atan2(velocity.x, velocity.z), LERP_VAL)
 		else:
-			pass
-			#armature.rotation.y = lerp_angle(armature.rotation.y, atan2(velocity.x, velocity.z), LERP_VAL / 5)
+			armature.rotation.y = lerp_angle(armature.rotation.y, atan2(velocity.x, velocity.z), LERP_VAL / 5)
 	else:
 		velocity.x = lerp(velocity.x, 0.0, LERP_VAL)
 		velocity.z = lerp(velocity.z, 0.0, LERP_VAL)
@@ -167,7 +165,7 @@ func place_camera():
 	var result = space_state.intersect_ray(query)
 	if result:
 		camera.position = Vector3.ZERO
-		# Make the camera move slightly closer to Cotu after going to the raycast hit to prevent the camera from seeing below the floor
+		# Make the camera move slightly closer to Player after going to the raycast hit to prevent the camera from seeing below the floor
 		camera.global_position = result.position + .2 * result.position.direction_to(global_position)
 	else:
 		camera.position = Vector3.BACK * max_cam_dist
