@@ -54,7 +54,7 @@ var target: Node3D
 const LERP_VAL := .15 # The rate at which lerp funcs change; used for body mvmt animations
 
 func _ready():
-	level = root.find_child("Level")
+	level = root.find_child("Level", true, false)
 	#ui = root.find_child("UIRoot")
 	
 	Input.mouse_mode = Input.MOUSE_MODE_CAPTURED
