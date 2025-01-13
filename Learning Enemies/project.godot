@@ -1,0 +1,28 @@
+; Engine configuration file.
+; It's best edited using the editor UI and not directly,
+; since the parameters that go here are not all obvious.
+;
+; Format:
+;   [section] ; section goes between []
+;   param=value ; assign values to parameters
+
+config_version=5
+
+[application]
+
+config/name="LearningEnemies"
+config/features=PackedStringArray("4.1", "Forward Plus")
+config/icon="res://icon.svg"
+
+[autoload]
+
+Globals="*res://globals.gd"
+
+[layer_names]
+
+3d_physics/layer_1="PlayerNonPhysical"
+3d_physics/layer_2="Arena"
+3d_physics/layer_3="Enemy"
+3d_physics/layer_4="PlayerPhysical"
+3d_physics/layer_5="ThickEnemy"
+3d_physics/layer_6="EnemyBound"

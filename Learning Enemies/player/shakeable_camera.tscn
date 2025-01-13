@@ -1,0 +1,23 @@
+[gd_scene load_steps=4 format=3 uid="uid://caemif352yq0e"]
+
+[ext_resource type="Script" path="res://player/shakeable_camera.gd" id="1_tbpev"]
+
+[sub_resource type="FastNoiseLite" id="FastNoiseLite_bitxu"]
+noise_type = 0
+seed = 1
+frequency = 0.1
+fractal_octaves = 3
+fractal_lacunarity = 3.0
+fractal_gain = 1.0
+
+[sub_resource type="SphereShape3D" id="SphereShape3D_68vp4"]
+radius = 1.5
+
+[node name="ShakeableCamera" type="Area3D"]
+script = ExtResource("1_tbpev")
+noise = SubResource("FastNoiseLite_bitxu")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="."]
+shape = SubResource("SphereShape3D_68vp4")
+
+[node name="Camera3D" type="Camera3D" parent="."]

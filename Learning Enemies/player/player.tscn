@@ -1,0 +1,39 @@
+[gd_scene load_steps=7 format=3 uid="uid://bx7widotjjie1"]
+
+[ext_resource type="Script" path="res://player/player_control.gd" id="1_38edy"]
+[ext_resource type="PackedScene" uid="uid://caemif352yq0e" path="res://player/shakeable_camera.tscn" id="1_snyau"]
+[ext_resource type="Script" path="res://hithurt/hurtbox.gd" id="3_y5blf"]
+
+[sub_resource type="CapsuleShape3D" id="CapsuleShape3D_vuheh"]
+radius = 0.25
+
+[sub_resource type="SphereMesh" id="SphereMesh_16b0m"]
+
+[sub_resource type="CapsuleShape3D" id="CapsuleShape3D_ukfhg"]
+radius = 0.25
+
+[node name="Player" type="CharacterBody3D"]
+collision_layer = 8
+collision_mask = 18
+script = ExtResource("1_38edy")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="."]
+shape = SubResource("CapsuleShape3D_vuheh")
+
+[node name="CameraTwistPivot" type="Node3D" parent="."]
+
+[node name="CameraPitchPivot" type="Node3D" parent="CameraTwistPivot"]
+
+[node name="CameraVisualObject" type="MeshInstance3D" parent="CameraTwistPivot/CameraPitchPivot"]
+visible = false
+mesh = SubResource("SphereMesh_16b0m")
+
+[node name="ShakeableCamera" parent="CameraTwistPivot/CameraPitchPivot/CameraVisualObject" instance=ExtResource("1_snyau")]
+
+[node name="Hurtbox" type="Area3D" parent="."]
+collision_mask = 4
+script = ExtResource("3_y5blf")
+opponent_hitboxes = ["Enemy"]
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Hurtbox"]
+shape = SubResource("CapsuleShape3D_ukfhg")

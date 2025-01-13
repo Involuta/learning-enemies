@@ -1,0 +1,49 @@
+extends Node
+
+signal camera_updated(rotation: Vector3)
+signal score_updated(score_change: int)
+signal health_segment_lost(seg_num: int)
+
+# Update this list before the layer names in Project Settings
+const PLAYER_HITBOX_COL_LAYER := 1
+const ARENA_COL_LAYER := 2
+const ENEMY_COL_LAYER := 3
+const PLAYER_PHYSICAL_COL_LAYER := 4
+const THICK_ENEMY_COL_LAYER := 5
+const ENEMY_BOUND_COL_LAYER := 6
+
+func make_mask(layers):
+	var mask := 0.0
+	for layer in layers:
+		mask += pow(2, layer-1)
+	return mask
+
+# "collision.get_collider().collision_layer" will return a layer number as a power of 2, but we're comparing it to a counting integer used in the editor
+func compare_layers(collision_layer, global_layer):
+	return collision_layer == pow(2, global_layer-1)
+
+var score := 0
+var multiplier := 50
+var combo_count := 0
+
+# health, hit score, kill score
+const enemy_hurtbox_data = {
+	"EnemyMeleeTier1" : [20, 1.0, 1.0],
+	"EnemyMeleeTier2" : [30, 1.0, 1.5],
+	"EnemyMeleeTier3" : [40, 1.5, 2.0],
+	"EnemyMobileGunner" : [10, 1.0, 1.0],
+	"EnemyStationaryGunner" : [10, 1.0, 1.0],
+	"FirstMiniboss" : [500, 1.0, 10.0],
+	
+	"RollerBall" : [10, 1.0, 1.0],
+	"BouncerBall" : [10, 1.0, 2.0],
+	"GiantRollerBall" : [30, 1.0, 2.0],
+	"GiantBouncerBall" : [10, 1.0, 2.0],
+	"SkullBall" : [60, 1.0, 3.0],
+	"PopperBall" : [10, 1.0, 1.0],
+}
+
+func award_score(points):
+	# Apply multipliers/modifiers
+	score += points * multiplier
+	score_updated.emit(points)
