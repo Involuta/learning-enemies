@@ -20,7 +20,7 @@ var rng := RandomNumberGenerator.new()
 @onready var nav_agent = $NavigationAgent3D
 @onready var anim_tree = $AnimationTree
 @onready var visual_mesh = $VisualMesh
-@onready var root = $/root/Level
+@onready var root = $/root
 
 var target : Node3D
 var walk_dest : Vector3
@@ -28,7 +28,7 @@ var walk_dest : Vector3
 var anim_tree_exists := true
 
 func _ready():
-	target = root.find_child("Player")
+	target = root.find_child("Player", true, false)
 	walk_dest = target.global_position + 5*Vector3.RIGHT
 	#add_to_group("lockonables")
 	if not find_child("AnimationTree", false, false):
@@ -38,7 +38,6 @@ func _ready():
 
 func _physics_process(delta):
 	if not is_on_floor():
-		print(walk_dest)
 		velocity.y -= gravity * delta
 	match(behav_state):
 		WALK_TO:
